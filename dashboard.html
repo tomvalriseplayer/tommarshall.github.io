@@ -1,75 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaming Dashboard Forum</title>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Database System</title>
+    <link rel="stylesheet" href="./Style/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h2><i class="fas fa-gamepad"></i> Gaming Dashboard Forum</h2>
-    <hr>
-  </header>
-  <nav class="section-bar">
-    <button class="section-button" onclick="showSection('fashion')">Fashion</button>
-    <button class="section-button" onclick="showSection('style')">Style</button>
-    <button class="section-button" onclick="showSection('trends')">Trends</button>
-  </nav>
-  <main>
-    <section id="fashion" class="forum-section active">
-      <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search Fashion topics...">
-        <button><i class="fas fa-search"></i></button>
-      </div>
-      <div class="content-area">
-        <div class="topic">
-          <h3>Summer Fashion 2024</h3>
-          <p>Discover the latest in summer fashion trends...</p>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fa-solid fa-database"></i> Police Database System</h1>
         </div>
-        <div class="topic">
-          <h3>Vintage Revival</h3>
-          <p>Exploring vintage styles coming back in 2024...</p>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search here..." onkeyup="highlightSearch()">
         </div>
-      </div>
-    </section>
-    <section id="style" class="forum-section">
-      <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search Style topics...">
-        <button><i class="fas fa-search"></i></button>
-      </div>
-      <div class="content-area">
-        <div class="topic">
-          <h3>Modern Minimalism</h3>
-          <p>Embrace simplicity with minimalistic styles...</p>
+        <div class="main-buttons">
+            <button class="button" onclick="toggleContainers('officers')">
+                <i class="fa-solid fa-user-shield"></i> Officer Data
+            </button>
+            <button class="button" onclick="toggleContainers('crimes')">
+                <i class="fa-solid fa-gavel"></i> Crime Records
+            </button>
+            <button class="button" onclick="toggleContainers('traffic')">
+                <i class="fa-solid fa-car-crash"></i> Traffic Violations
+            </button>
         </div>
-        <div class="topic">
-          <h3>Boho Chic</h3>
-          <p>The latest boho inspirations for 2024...</p>
+        <div id="content" class="content-section">
+            <!-- Dynamic content will be inserted here -->
         </div>
-      </div>
-    </section>
-    <section id="trends" class="forum-section">
-      <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search Trends topics...">
-        <button><i class="fas fa-search"></i></button>
-      </div>
-      <div class="content-area">
-        <div class="topic">
-          <h3>Techwear Innovations</h3>
-          <p>Explore the merge of technology and fashion...</p>
-        </div>
-        <div class="topic">
-          <h3>Eco-Friendly Fabrics</h3>
-          <p>Sustainable fashion with innovative fabrics...</p>
-        </div>
-      </div>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2024 Gaming Dashboard Forum</p>
-  </footer>
-  <script src="scripts.js"></script>
+    </div>
+
+    <script src="./Javascript/dashboard.js"></script>
 </body>
 </html>
