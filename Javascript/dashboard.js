@@ -136,8 +136,11 @@ async function highlightSearch() {
                     }
                 }
 
-                // If title, details, or content matches the search term, display the container
-                if (titleText.includes(input) || detailsText.includes(input) || htmlContent.toLowerCase().includes(input)) {
+                // Exclude media or file paths (e.g., image paths or .png, .jpg) from matching in details
+                const sanitizedDetailsText = sanitizeDetailsText(item.details);
+
+                // If title, sanitized details, or HTML content matches the search term, display the container
+                if (titleText.includes(input) || sanitizedDetailsText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
                     const box = document.createElement('div');
                     box.classList.add('container-box');
@@ -145,7 +148,7 @@ async function highlightSearch() {
                     box.innerHTML = `
                         <h3>${item.icon} ${item.title}</h3>
                         <hr>
-                        <p>${item.details}</p>
+                        <p>${sanitizedDetailsText}</p>
                     `;
 
                     // Automatically open the container if a match is found
@@ -188,6 +191,13 @@ async function highlightSearch() {
         // If no input is given, show no containers (same as initial load)
         content.innerHTML = ''; // Empty the content, no containers visible
     }
+}
+
+// Function to sanitize details text (exclude media and file paths)
+function sanitizeDetailsText(detailsText) {
+    // This regex matches common image paths (e.g., .png, .jpg, .jpeg, etc.) and removes them
+    const sanitizedText = detailsText.replace(/(https?:\/\/[^\s]+(?:\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg|\.webp))/gi, '');
+    return sanitizedText;
 }
 
 function highlightText(element, query) {
