@@ -7,7 +7,17 @@ const data = {
         },
         { 
             title: 'VOLUME II | POLICY', 
-            details: 'Text/volumei.html', // Load text from this file
+            details: 'Text/volumeii.html', // Load text from this file
+            icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
+        },
+        { 
+            title: 'VOLUME III | LINE PROCEDURES', 
+            details: 'Text/volumeiii.html', // Load text from this file
+            icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
+        },
+        { 
+            title: 'VOLUME IV | PROFESSIONAL STANDARDS', 
+            details: 'Text/volumeiv.html', // Load text from this file
             icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
         }
     ],
