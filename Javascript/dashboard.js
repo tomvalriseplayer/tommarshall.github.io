@@ -7,7 +7,7 @@ const data = {
         },
         { 
             title: 'VOLUME II | POLICY', 
-            details: 'Text/volumei.txt', // Load text from this file
+            details: 'Text/volumei.html', // Load text from this file
             icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
         }
     ],
@@ -52,7 +52,7 @@ function toggleContainers(type) {
             <hr>
         `;
 
-        // Create the element for content (image or text)
+        // Create the element for content (image or text or HTML)
         let contentElement;
 
         if (item.details.endsWith('.png') || item.details.endsWith('.jpg') || item.details.endsWith('.jpeg')) {
@@ -61,9 +61,9 @@ function toggleContainers(type) {
             contentElement.src = item.details;
             contentElement.alt = `${item.title} Image`;
             contentElement.classList.add('container-image');
-        } else if (item.details.endsWith('.txt')) {
-            // If the details are a .txt file, fetch the content
-            contentElement = document.createElement('pre'); // Use <pre> for preserving formatting
+        } else if (item.details.endsWith('.html')) {
+            // If the details are an HTML file, fetch the content and display it as HTML
+            contentElement = document.createElement('div'); // Use a div for HTML content
             contentElement.textContent = 'Loading...'; // Placeholder while loading
             fetch(item.details)
                 .then(response => {
@@ -72,8 +72,8 @@ function toggleContainers(type) {
                     }
                     return response.text();
                 })
-                .then(text => {
-                    contentElement.textContent = text; // Replace placeholder with file content
+                .then(html => {
+                    contentElement.innerHTML = html; // Render the HTML content
                 })
                 .catch(error => {
                     console.error('Failed to load file:', error);
