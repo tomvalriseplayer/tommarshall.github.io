@@ -109,27 +109,39 @@ function toggleContainers(type) {
 }
 
 // Function to highlight the text and handle search functionality
-function highlightSearch() {
+async function highlightSearch() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const content = document.getElementById('content');
     content.innerHTML = ''; // Clear the content before displaying results
 
     if (input) {
-        // Loop through the data and show matching containers
         let foundMatch = false;
 
         // Loop through all data categories (officers, crimes, traffic)
         for (const category in data) {
-            data[category].forEach(item => {
+            for (const item of data[category]) {
                 const titleText = item.title.toLowerCase();
                 const detailsText = item.details.toLowerCase();
+                let htmlContent = ''; // This will hold the fetched content for HTML files
 
-                // If title or details match the search term, display the container
-                if (titleText.includes(input) || detailsText.includes(input)) {
+                // If the details are an HTML file, fetch the content and display it as HTML
+                if (item.details.endsWith('.html')) {
+                    try {
+                        const response = await fetch(item.details);
+                        if (response.ok) {
+                            htmlContent = await response.text();  // Fetch and store HTML content
+                        }
+                    } catch (error) {
+                        console.error('Failed to load file:', error);
+                    }
+                }
+
+                // If title, details, or content matches the search term, display the container
+                if (titleText.includes(input) || detailsText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
                     const box = document.createElement('div');
                     box.classList.add('container-box');
-                    
+
                     box.innerHTML = `
                         <h3>${item.icon} ${item.title}</h3>
                         <hr>
@@ -155,10 +167,17 @@ function highlightSearch() {
                     // Highlight matching text in title and details
                     highlightText(box.querySelector('h3'), input);  // Highlight in the title
                     highlightText(box.querySelector('p'), input);   // Highlight in the details
-                    
+
+                    // If the content is HTML (e.g., volumeii.html), display it as HTML
+                    if (htmlContent) {
+                        const htmlElement = document.createElement('div');
+                        htmlElement.innerHTML = htmlContent;
+                        box.appendChild(htmlElement);
+                    }
+
                     content.appendChild(box);
                 }
-            });
+            }
         }
 
         // If no matches were found, hide all containers
