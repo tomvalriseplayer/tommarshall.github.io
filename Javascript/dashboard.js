@@ -63,7 +63,7 @@ function toggleContainers(type) {
             contentElement.classList.add('container-image');
         } else if (item.details.endsWith('.txt')) {
             // If the details are a .txt file, fetch the content
-            contentElement = document.createElement('p');
+            contentElement = document.createElement('pre'); // Use <pre> for preserving formatting
             contentElement.textContent = 'Loading...'; // Placeholder while loading
             fetch(item.details)
                 .then(response => {
@@ -80,7 +80,7 @@ function toggleContainers(type) {
                     contentElement.textContent = 'Error loading file';
                 });
         } else {
-            // If the details are text, create the text element
+            // If the details are plain text, create a paragraph
             contentElement = document.createElement('p');
             contentElement.textContent = item.details;
         }
