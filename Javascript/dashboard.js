@@ -7,7 +7,7 @@ const data = {
         },
         { 
             title: 'VOLUME II | POLICY', 
-            details: 'Text/volumei.txt', // Path to the text file
+            details: 'Text/volumei.txt', // Load text from this file
             icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
         }
     ],
@@ -48,7 +48,7 @@ function toggleContainers(type) {
         
         // Add icon and title to the box
         box.innerHTML = `
-            <h3>${item.icon} ${item.title}</h3>  <!-- Add icon before the title -->
+            <h3>${item.icon} ${item.title}</h3>
             <hr>
         `;
 
@@ -58,19 +58,26 @@ function toggleContainers(type) {
         if (item.details.endsWith('.png') || item.details.endsWith('.jpg') || item.details.endsWith('.jpeg')) {
             // If the details are an image path, create the image element
             contentElement = document.createElement('img');
-            contentElement.src = item.details;  // Use the image path from 'details'
-            contentElement.alt = `${item.title} Image`;  // Add alt text for the image
-            contentElement.classList.add('container-image');  // Add a class for styling
+            contentElement.src = item.details;
+            contentElement.alt = `${item.title} Image`;
+            contentElement.classList.add('container-image');
         } else if (item.details.endsWith('.txt')) {
-            // If the details are a text file, fetch the file content
+            // If the details are a .txt file, fetch the content
             contentElement = document.createElement('p');
-            fetch(item.details)  // Fetch the .txt file
-                .then(response => response.text())  // Parse the response as text
+            contentElement.textContent = 'Loading...'; // Placeholder while loading
+            fetch(item.details)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
                 .then(text => {
-                    contentElement.textContent = text;  // Display the text in the container
+                    contentElement.textContent = text; // Replace placeholder with file content
                 })
                 .catch(error => {
-                    contentElement.textContent = "Error loading file";  // Error handling
+                    console.error('Failed to load file:', error);
+                    contentElement.textContent = 'Error loading file';
                 });
         } else {
             // If the details are text, create the text element
@@ -80,11 +87,10 @@ function toggleContainers(type) {
 
         // Initially set the content to be hidden (toggle functionality)
         contentElement.style.display = 'none';
-        box.appendChild(contentElement); // Append the content (image or text) to the box
+        box.appendChild(contentElement);
 
         // Add the click event listener to toggle the details visibility
         box.addEventListener('click', function () {
-            // Toggle the visibility of the clicked container's details (either text or image)
             contentElement.style.display = contentElement.style.display === 'block' ? 'none' : 'block';
         });
 
