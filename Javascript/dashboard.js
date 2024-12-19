@@ -160,63 +160,23 @@ async function highlightSearch() {
                         <hr>
                     `;
 
-                    let contentElement;
-                    
-                    if (item.details.endsWith('.html')) {
-                        contentElement = document.createElement('iframe');
-                        contentElement.classList.add('container-iframe');
-                        contentElement.style.width = '100%';
-                        contentElement.style.border = 'none';
-                        contentElement.style.display = 'none';
-                        
-                        // Write the highlighted content to the iframe
-                        box.appendChild(contentElement);
-                        contentElement.onload = () => {
-                            const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
-                            
-                            // Apply the specific CSS first
-                            if (item.cssPath) {
-                                const link = iframeDoc.createElement('link');
-                                link.rel = 'stylesheet';
-                                link.href = item.cssPath;
-                                iframeDoc.head.appendChild(link);
-                            }
+                    const htmlElement = document.createElement('div');
+                    htmlElement.innerHTML = htmlContent; // Render HTML
 
-                            // Add highlighted content
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = htmlContent;
-                            highlightText(tempDiv, input);
-                            iframeDoc.body.innerHTML = tempDiv.innerHTML;
+                    // Highlight matches within the rendered HTML content
+                    highlightText(htmlElement, input);
 
-                            // Style the iframe content
-                            iframeDoc.body.style.display = 'flex';
-                            iframeDoc.body.style.justifyContent = 'center';
-                            iframeDoc.body.style.alignItems = 'center';
-                            iframeDoc.body.style.textAlign = 'center';
-                            iframeDoc.body.style.margin = '0';
-                            iframeDoc.body.style.padding = '20px';
-                            iframeDoc.body.style.boxSizing = 'border-box';
-                            
-                            // Adjust iframe height
-                            contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
-                        };
-                        
-                        // Set a data URL to trigger the onload event
-                        contentElement.src = 'about:blank';
-                    } else {
-                        contentElement = document.createElement('p');
-                        contentElement.textContent = item.details;
-                        contentElement.style.display = 'none';
-                        box.appendChild(contentElement);
+                    // Apply CSS if available
+                    if (item.cssPath) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = item.cssPath;
+                        htmlElement.appendChild(link);
                     }
 
                     const titleElement = box.querySelector('h3');
                     titleElement.addEventListener('click', () => {
-                        contentElement.style.display = contentElement.style.display === 'block' ? 'none' : 'block';
-                        if (contentElement.tagName === 'IFRAME') {
-                            const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
-                            contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
-                        }
+                        htmlElement.style.display = htmlElement.style.display === 'block' ? 'none' : 'block';
                     });
 
                     // Highlight matches in the title
