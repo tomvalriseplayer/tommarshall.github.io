@@ -1,7 +1,7 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME IE | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
