@@ -1,7 +1,7 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I1 | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
@@ -188,6 +188,7 @@ async function highlightSearch() {
                             iframeDoc.body.style.boxSizing = 'border-box';
                             // Adjust iframe height to fit content
                             contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
+                            highlightText(iframeDoc.body, input); // Highlight text inside iframe
                         };
                     } else if (item.details.endsWith('.png') || item.details.endsWith('.jpg')) {
                         contentElement = document.createElement('img');
