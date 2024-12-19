@@ -165,9 +165,30 @@ async function highlightSearch() {
 
                     let contentElement;
                     if (item.details.endsWith('.html')) {
-                        contentElement = document.createElement('div');
-                        contentElement.innerHTML = htmlContent;
-                        highlightText(contentElement, input);
+                        contentElement = document.createElement('iframe');
+                        contentElement.src = item.details;
+                        contentElement.classList.add('container-iframe');
+                        contentElement.style.width = '100%';
+                        contentElement.style.border = 'none';
+                        contentElement.onload = () => {
+                            const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
+                            if (item.cssPath) {
+                                const link = iframeDoc.createElement('link');
+                                link.rel = 'stylesheet';
+                                link.href = item.cssPath;
+                                iframeDoc.head.appendChild(link);
+                            }
+                            // Center the content inside the iframe
+                            iframeDoc.body.style.display = 'flex';
+                            iframeDoc.body.style.justifyContent = 'center';
+                            iframeDoc.body.style.alignItems = 'center';
+                            iframeDoc.body.style.textAlign = 'center';
+                            iframeDoc.body.style.margin = '0';
+                            iframeDoc.body.style.padding = '20px';
+                            iframeDoc.body.style.boxSizing = 'border-box';
+                            // Adjust iframe height to fit content
+                            contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
+                        };
                     } else if (item.details.endsWith('.png') || item.details.endsWith('.jpg')) {
                         contentElement = document.createElement('img');
                         contentElement.src = item.details;
@@ -181,14 +202,6 @@ async function highlightSearch() {
 
                     contentElement.style.display = 'block'; // Auto-show matching content
                     box.appendChild(contentElement);
-
-                    // Apply CSS if available
-                    if (item.cssPath) {
-                        const link = document.createElement('link');
-                        link.rel = 'stylesheet';
-                        link.href = item.cssPath;
-                        box.appendChild(link);
-                    }
 
                     // Highlight title if it matches
                     if (titleText.includes(input)) {
