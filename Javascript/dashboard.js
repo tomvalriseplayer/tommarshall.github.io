@@ -130,7 +130,7 @@ function toggleContainers(type) {
 async function highlightSearch() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const content = document.getElementById('content');
-    content.innerHTML = ''; // Clear previous results
+    content.innerHTML = '';
 
     if (input) {
         let foundMatch = false;
@@ -167,14 +167,12 @@ async function highlightSearch() {
                         contentElement.classList.add('container-iframe');
                         contentElement.style.width = '100%';
                         contentElement.style.border = 'none';
-                        contentElement.style.display = 'none';
+                        contentElement.style.display = 'block'; // Changed to block by default
                         
-                        // Write the highlighted content to the iframe
                         box.appendChild(contentElement);
                         contentElement.onload = () => {
                             const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
                             
-                            // Apply the specific CSS first
                             if (item.cssPath) {
                                 const link = iframeDoc.createElement('link');
                                 link.rel = 'stylesheet';
@@ -182,13 +180,18 @@ async function highlightSearch() {
                                 iframeDoc.head.appendChild(link);
                             }
 
-                            // Add highlighted content
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = htmlContent;
-                            highlightText(tempDiv, input);
-                            iframeDoc.body.innerHTML = tempDiv.innerHTML;
+                            // Inject the content and highlight it
+                            iframeDoc.body.innerHTML = htmlContent;
+                            const allElements = iframeDoc.body.getElementsByTagName('*');
+                            for (const element of allElements) {
+                                if (element.childNodes.length === 1 && element.childNodes[0].nodeType === 3) {
+                                    const text = element.textContent;
+                                    element.innerHTML = text.replace(new RegExp(input, 'gi'), 
+                                        match => `<span class="highlight">${match}</span>`
+                                    );
+                                }
+                            }
 
-                            // Style the iframe content
                             iframeDoc.body.style.display = 'flex';
                             iframeDoc.body.style.justifyContent = 'center';
                             iframeDoc.body.style.alignItems = 'center';
@@ -197,16 +200,14 @@ async function highlightSearch() {
                             iframeDoc.body.style.padding = '20px';
                             iframeDoc.body.style.boxSizing = 'border-box';
                             
-                            // Adjust iframe height
                             contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
                         };
                         
-                        // Set a data URL to trigger the onload event
-                        contentElement.src = 'about:blank';
+                        contentElement.src = item.details;
                     } else {
                         contentElement = document.createElement('p');
                         contentElement.textContent = item.details;
-                        contentElement.style.display = 'none';
+                        contentElement.style.display = 'block'; // Changed to block by default
                         box.appendChild(contentElement);
                     }
 
@@ -220,7 +221,10 @@ async function highlightSearch() {
                     });
 
                     // Highlight matches in the title
-                    highlightText(box.querySelector('h3'), input);
+                    titleElement.innerHTML = titleElement.innerHTML.replace(
+                        new RegExp(input, 'gi'),
+                        match => `<span class="highlight">${match}</span>`
+                    );
 
                     content.appendChild(box);
                 }
