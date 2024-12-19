@@ -21,7 +21,7 @@ const data = {
             icon: '<i class="fa-solid fa-user-shield"></i>' // Officer icon
         }
     ],
-    crimes: [
+    impound: [
         {
             title: 'Case #001: Robbery',
             details: 'Location: Main Street | Status: Solved',

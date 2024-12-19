@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Police Database System</title>
-    <link rel="icon" href="./Media/favicon.webp" type="image/webp"> <!-- Favicon -->
+    <link rel="icon" href="./Media/favicon.webp" type="image/webp">
     <link rel="stylesheet" href="./Style/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"> <!-- Flaticon -->
 </head>
 <script>
     // Check if the user is logged in
@@ -29,10 +30,10 @@
         </div>
         <div class="main-buttons">
             <button class="button" onclick="toggleContainers('manual')">
-                <i class="fa-solid fa-user-shield"></i> Departmental Manual
+                <i class="fa-solid fa-building-shield"></i> Department Manual
             </button>
-            <button class="button" onclick="toggleContainers('crimes')">
-                <i class="fa-solid fa-gavel"></i> Crime Records
+            <button class="button" onclick="toggleContainers('impound')">
+                <i class="fa-solid fa-truck-tow"></i> Impound Guidelines
             </button>
             <button class="button" onclick="toggleContainers('traffic')">
                 <i class="fa-solid fa-car-crash"></i> Traffic Violations
