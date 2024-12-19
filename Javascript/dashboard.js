@@ -1,7 +1,7 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME I1 | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
@@ -153,9 +153,11 @@ async function highlightSearch() {
                 }
 
                 const contentText = htmlContent.toLowerCase();
-                if ((titleText.includes(input) || contentText.includes(input)) && !addedContainers.has(item.title)) {
+                const uniqueIdentifier = `${category}-${item.title}`; // Create a unique identifier
+
+                if ((titleText.includes(input) || contentText.includes(input)) && !addedContainers.has(uniqueIdentifier)) {
                     foundMatch = true;
-                    addedContainers.add(item.title); // Mark container as added
+                    addedContainers.add(uniqueIdentifier); // Mark container as added
 
                     const box = document.createElement('div');
                     box.classList.add('container-box');
