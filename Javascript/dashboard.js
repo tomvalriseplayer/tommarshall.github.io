@@ -108,25 +108,21 @@ async function highlightSearch() {
         for (const category in data) {
             for (const item of data[category]) {
                 const titleText = item.title.toLowerCase();
-                const sanitizedDetailsText = sanitizeDetailsText(item.details);
+                const detailsText = item.details.toLowerCase();
                 let htmlContent = '';
 
                 if (item.details.endsWith('.html')) {
                     try {
                         const response = await fetch(item.details);
-                        if (response.ok) {
-                            htmlContent = await response.text();
-                        }
+                        if (response.ok) htmlContent = await response.text();
                     } catch (error) {
                         console.error('Failed to load file:', error);
                     }
                 }
 
-                if (
-                    titleText.includes(input) ||
-                    sanitizedDetailsText.includes(input) ||
-                    htmlContent.toLowerCase().includes(input)
-                ) {
+                const sanitizedDetailsText = sanitizeDetailsText(item.details);
+
+                if (titleText.includes(input) || sanitizedDetailsText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
                     const box = document.createElement('div');
                     box.classList.add('container-box');
@@ -134,79 +130,62 @@ async function highlightSearch() {
                     box.innerHTML = `
                         <h3>${item.icon} ${item.title}</h3>
                         <hr>
+                        <p>${sanitizedDetailsText}</p>
                     `;
 
-                    const contentElement = document.createElement('div');
-                    if (item.details.endsWith('.html') && htmlContent) {
-                        contentElement.innerHTML = htmlContent;
-                        highlightHTMLContent(contentElement, input); // Highlight within HTML content
-                    } else {
-                        contentElement.textContent = sanitizedDetailsText;
-                        highlightText(contentElement, input); // Highlight within plain text
-                    }
-
-                    contentElement.style.display = 'block';
-                    box.appendChild(contentElement);
+                    const details = box.querySelector('p');
+                    details.style.display = 'block';
 
                     const titleElement = box.querySelector('h3');
                     titleElement.addEventListener('click', () => {
-                        contentElement.style.display = contentElement.style.display === 'block' ? 'none' : 'block';
+                        const allDetails = document.querySelectorAll('.container-box p');
+                        allDetails.forEach(detail => {
+                            if (detail !== details) detail.style.display = 'none';
+                        });
+                        details.style.display = details.style.display === 'block' ? 'none' : 'block';
                     });
 
-                    highlightText(box.querySelector('h3'), input); // Highlight in title
+                    highlightText(box.querySelector('h3'), input);
+                    highlightText(box.querySelector('p'), input);
+
+                    if (htmlContent) {
+                        const htmlElement = document.createElement('div');
+                        htmlElement.innerHTML = htmlContent;
+                        highlightText(htmlElement, input);
+                        box.appendChild(htmlElement);
+                    }
+
                     content.appendChild(box);
                 }
             }
         }
 
-        if (!foundMatch) {
-            content.innerHTML = '<p>No matching records found.</p>';
-        }
+        if (!foundMatch) content.innerHTML = '<p>No matching records found.</p>';
     } else {
         content.innerHTML = '';
     }
 }
 
-// Function to highlight text inside plain HTML elements
-function highlightText(element, query) {
-    const regex = new RegExp(`(${query})`, 'gi');
-    element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
-}
-
-// Function to traverse and highlight matching text within HTML content
-function highlightHTMLContent(element, query) {
-    const regex = new RegExp(`(${query})`, 'gi');
-
-    function traverseNodes(node) {
-        if (node.nodeType === Node.TEXT_NODE) {
-            const match = node.nodeValue.match(regex);
-            if (match) {
-                const span = document.createElement('span');
-                span.className = 'highlight';
-                span.textContent = match[0];
-
-                const parts = node.nodeValue.split(regex);
-                const fragment = document.createDocumentFragment();
-
-                parts.forEach((part, index) => {
-                    fragment.appendChild(document.createTextNode(part));
-                    if (index < parts.length - 1) {
-                        fragment.appendChild(span.cloneNode(true));
-                    }
-                });
-
-                node.replaceWith(fragment);
-            }
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            node.childNodes.forEach(traverseNodes);
-        }
-    }
-
-    traverseNodes(element);
-}
-
 function sanitizeDetailsText(detailsText) {
     return detailsText.replace(/(https?:\/\/[^\s]+(?:\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg|\.webp))/gi, '');
+}
+
+function highlightText(element, query) {
+    const originalHTML = element.innerHTML;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = originalHTML;
+
+    const icon = tempDiv.querySelector('i');
+    const textContent = tempDiv.textContent;
+
+    const regex = new RegExp(`(${query})`, 'gi');
+    const highlightedText = textContent.replace(regex, '<span class="highlight">$1</span>');
+
+    if (icon) {
+        element.innerHTML = `<i class="${icon.className}"></i> ${highlightedText}`;
+    } else {
+        element.innerHTML = highlightedText;
+    }
 }
 
 // Function to clear the highlights
