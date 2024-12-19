@@ -137,6 +137,7 @@ body {
   letter-spacing: 2px;
   background: linear-gradient(135deg, #ffcc00, #ff9900); /* Gradient background */
   -webkit-background-clip: text; /* Makes the gradient apply to the text */
+  background-clip: text; /* Standard property for modern browsers */
   color: transparent; /* Make the text transparent to show gradient */
   text-shadow: 0 3px 6px rgba(0, 0, 0, 0.7); /* Subtle shadow */
 }
