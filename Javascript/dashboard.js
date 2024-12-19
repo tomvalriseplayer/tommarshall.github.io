@@ -1,7 +1,7 @@
 const data = {
     officers: [
         {
-            title: 'VOLUME I1 | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I2 | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>' // Officer icon
         },
@@ -160,8 +160,37 @@ async function highlightSearch() {
 }
 
 function highlightText(element, query) {
+    // Ensure the query is not too short
+    if (query.length < 2) return; // Prevent highlighting with single characters
+
     const regex = new RegExp(`(${query})`, 'gi'); // Case-insensitive regex
-    element.innerHTML = element.innerHTML.replace(regex, '<span class="highlight">$1</span>');
+    const originalHTML = element.innerHTML;
+
+    // Temporary div to work on the text content without affecting tags
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = originalHTML;
+
+    // Find all text nodes in the element
+    const textNodes = [];
+    const walk = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, null, false);
+
+    while (walk.nextNode()) {
+        textNodes.push(walk.currentNode);
+    }
+
+    // Highlight the text nodes without affecting the HTML tags
+    textNodes.forEach(node => {
+        const parentNode = node.parentNode;
+        const highlightedText = node.nodeValue.replace(regex, '<span class="highlight">$1</span>');
+        const span = document.createElement('span');
+        span.innerHTML = highlightedText;
+
+        // Replace the node with the highlighted span
+        parentNode.replaceChild(span, node);
+    });
+
+    // Update the element with the newly highlighted text
+    element.innerHTML = tempDiv.innerHTML;
 }
 
 // Function to clear the highlights
