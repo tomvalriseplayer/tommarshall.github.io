@@ -65,12 +65,6 @@ function toggleContainers(type) {
     const content = document.getElementById('content');
     content.innerHTML = ''; // Clear content before adding new ones
 
-    // Clear any previously added CSS
-    const existingLink = document.getElementById('dynamic-css');
-    if (existingLink) {
-        existingLink.remove();
-    }
-
     data[type].forEach(item => {
         const box = document.createElement('div');
         box.classList.add('container-box');
@@ -88,34 +82,18 @@ function toggleContainers(type) {
             contentElement.alt = `${item.title} Image`;
             contentElement.classList.add('container-image');
         } else if (item.details.endsWith('.html')) {
-            contentElement = document.createElement('div');
-            contentElement.textContent = 'Loading...';
-            fetch(item.details)
-                .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    return response.text();
-                })
-                .then(html => {
-                    // Create a temporary container to parse the HTML
-                    const tempContainer = document.createElement('div');
-                    tempContainer.innerHTML = html;
-
-                    // Append the stylesheet link to the document head
-                    if (item.cssPath) {
-                        const link = document.createElement('link');
-                        link.rel = 'stylesheet';
-                        link.href = item.cssPath; // Use the dynamic CSS path
-                        link.id = 'dynamic-css'; // Add an ID to identify the dynamically added CSS
-                        document.head.appendChild(link);
-                    }
-
-                    // Set the contentElement's innerHTML to the modified HTML
-                    contentElement.innerHTML = tempContainer.innerHTML;
-                })
-                .catch(error => {
-                    console.error('Failed to load file:', error);
-                    contentElement.textContent = 'Error loading file';
-                });
+            contentElement = document.createElement('iframe');
+            contentElement.src = item.details;
+            contentElement.classList.add('container-iframe');
+            contentElement.onload = () => {
+                const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
+                if (item.cssPath) {
+                    const link = iframeDoc.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = item.cssPath;
+                    iframeDoc.head.appendChild(link);
+                }
+            };
         } else {
             contentElement = document.createElement('p');
             contentElement.textContent = item.details;
