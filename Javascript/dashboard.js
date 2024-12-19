@@ -3,51 +3,60 @@ const data = {
         {
             title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
-            icon: '<i class="fa-solid fa-sitemap"></i>' // Officer icon
+            icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
+            cssPath: '' // No CSS needed for images
         },
         {
             title: 'VOLUME II | POLICY',
             details: 'Text/volumeii.html', // Load text from this file
-            icon: '<i class="fa-solid fa-paste"></i>' // Officer icon
+            icon: '<i class="fa-solid fa-paste"></i>', // Officer icon
+            cssPath: '../Style/volumeii.css'
         },
         {
             title: 'VOLUME III | LINE PROCEDURES',
             details: 'Text/volumeiii.html', // Load text from this file
-            icon: '<i class="fa-solid fa-book-journal-whills"></i>' // Officer icon
+            icon: '<i class="fa-solid fa-book-journal-whills"></i>', // Officer icon
+            cssPath: '../Style/volumeiii.css'
         },
         {
             title: 'VOLUME IV | PROFESSIONAL STANDARDS',
             details: 'Text/volumeiv.html', // Load text from this file
-            icon: '<i class="fa-solid fa-user-shield"></i>' // Officer icon
+            icon: '<i class="fa-solid fa-user-shield"></i>', // Officer icon
+            cssPath: '../Style/volumeiv.css'
         }
     ],
     impound: [
         {
             title: 'WHEN TO IMPOUND A VEHICLE?',
             details: 'Text/impoundi.html',
-            icon: '<i class="fa-solid fa-gavel"></i>' // Crime icon
+            icon: '<i class="fa-solid fa-gavel"></i>', // Crime icon
+            cssPath: '../Style/impound.css'
         },
         {
             title: 'LIST OF VIOLATIONS',
             details: 'Text/impoundii.html',
-            icon: '<i class="fa-solid fa-gavel"></i>' // Crime icon
+            icon: '<i class="fa-solid fa-gavel"></i>', // Crime icon
+            cssPath: '../Style/impound.css'
         },
         {
             title: 'WHEN TO IMPOUND A VEHICLE?',
             details: 'Text/impoundiii.html',
-            icon: '<i class="fa-solid fa-gavel"></i>' // Crime icon
+            icon: '<i class="fa-solid fa-gavel"></i>', // Crime icon
+            cssPath: '../Style/impound.css'
         }
     ],
     traffic: [
         {
             title: 'Speeding',
             details: 'Fines: $200 | Points: 2',
-            icon: '<i class="fa-solid fa-car-crash"></i>' // Traffic icon
+            icon: '<i class="fa-solid fa-car-crash"></i>', // Traffic icon
+            cssPath: '' // No CSS needed for text
         },
         {
             title: 'Reckless Driving',
             details: 'Fines: $500 | Points: 4',
-            icon: '<i class="fa-solid fa-car-crash"></i>' // Traffic icon
+            icon: '<i class="fa-solid fa-car-crash"></i>', // Traffic icon
+            cssPath: '' // No CSS needed for text
         }
     ]
 };
@@ -87,10 +96,10 @@ function toggleContainers(type) {
 
                     // Find the head element and append the stylesheet link
                     const head = tempContainer.querySelector('head');
-                    if (head) {
+                    if (head && item.cssPath) {
                         const link = document.createElement('link');
                         link.rel = 'stylesheet';
-                        link.href = '../Style/volumeii.css'; // Ensure the correct path
+                        link.href = item.cssPath; // Use the dynamic CSS path
                         head.appendChild(link);
                     }
 
