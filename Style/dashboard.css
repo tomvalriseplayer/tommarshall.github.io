@@ -179,4 +179,5 @@ body {
     border: none;
     overflow: hidden;
     display: block; /* Ensure it behaves like a block element */
+    height: auto; /* Adjust height to fit the content */
 }

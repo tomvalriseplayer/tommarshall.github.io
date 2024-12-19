@@ -1,7 +1,7 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME IE | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
@@ -95,6 +95,14 @@ function toggleContainers(type) {
                     link.href = item.cssPath;
                     iframeDoc.head.appendChild(link);
                 }
+                // Center the content inside the iframe
+                iframeDoc.body.style.display = 'flex';
+                iframeDoc.body.style.justifyContent = 'center';
+                iframeDoc.body.style.alignItems = 'center';
+                iframeDoc.body.style.textAlign = 'center';
+                iframeDoc.body.style.margin = '0';
+                iframeDoc.body.style.padding = '20px';
+                iframeDoc.body.style.boxSizing = 'border-box';
                 // Adjust iframe height to fit content
                 contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
             };
