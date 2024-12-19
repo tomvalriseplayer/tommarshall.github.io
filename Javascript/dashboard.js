@@ -111,13 +111,22 @@ async function highlightSearch() {
                 let htmlContent = '';
 
                 if (item.details.endsWith('.html')) {
-                    try {
-                        const response = await fetch(item.details);
-                        if (response.ok) htmlContent = await response.text();
-                    } catch (error) {
-                        console.error('Failed to load file:', error);
-                    }
-                }
+                    contentElement = document.createElement('div');
+                    contentElement.textContent = 'Loading...'; // Temporary loading indicator
+                    fetch(item.details)
+                        .then(response => {
+                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                            return response.text();
+                        })
+                        .then(html => {
+                            contentElement.innerHTML = html; // Render fetched HTML
+                            highlightText(contentElement, document.getElementById('searchInput').value.toLowerCase()); // Highlight search terms
+                        })
+                        .catch(error => {
+                            console.error('Failed to load file:', error);
+                            contentElement.textContent = 'Error loading file';
+                        });
+                }                
 
                 if (titleText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
@@ -163,22 +172,15 @@ function sanitizeDetailsText(detailsText) {
 }
 
 function highlightText(element, query) {
-    const originalHTML = element.innerHTML;
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = originalHTML;
+    if (!query) return; // Skip if no query is provided
 
-    const icon = tempDiv.querySelector('i');
-    const textContent = tempDiv.textContent;
+    const regex = new RegExp(`(${query})`, 'gi'); // Case-insensitive regex
+    const originalHTML = element.innerHTML; // Preserve the original HTML structure
 
-    const regex = new RegExp(`(${query})`, 'gi');
-    const highlightedText = textContent.replace(regex, '<span class="highlight">$1</span>');
-
-    if (icon) {
-        element.innerHTML = `<i class="${icon.className}"></i> ${highlightedText}`;
-    } else {
-        element.innerHTML = highlightedText;
-    }
+    // Replace matches with a span for highlighting
+    element.innerHTML = originalHTML.replace(regex, '<span class="highlight">$1</span>');
 }
+
 
 // Function to clear the highlights
 function clearHighlights() {
