@@ -134,6 +134,7 @@ async function highlightSearch() {
 
     if (input) {
         let foundMatch = false;
+        const addedContainers = new Set(); // Track added containers
 
         for (const category in data) {
             for (const item of data[category]) {
@@ -152,8 +153,9 @@ async function highlightSearch() {
                 }
 
                 const contentText = htmlContent.toLowerCase();
-                if (titleText.includes(input) || contentText.includes(input)) {
+                if ((titleText.includes(input) || contentText.includes(input)) && !addedContainers.has(item.title)) {
                     foundMatch = true;
+                    addedContainers.add(item.title); // Mark container as added
 
                     const box = document.createElement('div');
                     box.classList.add('container-box');
