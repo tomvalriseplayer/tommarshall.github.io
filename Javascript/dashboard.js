@@ -1,48 +1,48 @@
 const data = {
     officers: [
-        { 
-            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS', 
+        {
+            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
-            icon: '<i class="fa-solid fa-sitemap"></i>'  // Officer icon
+            icon: '<i class="fa-solid fa-sitemap"></i>' // Officer icon
         },
-        { 
-            title: 'VOLUME II | POLICY', 
+        {
+            title: 'VOLUME II | POLICY',
             details: 'Text/volumeii.html', // Load text from this file
-            icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
+            icon: '<i class="fa-solid fa-user-shield"></i>' // Officer icon
         },
-        { 
-            title: 'VOLUME III | LINE PROCEDURES', 
+        {
+            title: 'VOLUME III | LINE PROCEDURES',
             details: 'Text/volumeiii.html', // Load text from this file
-            icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
+            icon: '<i class="fa-solid fa-user-shield"></i>' // Officer icon
         },
-        { 
-            title: 'VOLUME IV | PROFESSIONAL STANDARDS', 
+        {
+            title: 'VOLUME IV | PROFESSIONAL STANDARDS',
             details: 'Text/volumeiv.html', // Load text from this file
-            icon: '<i class="fa-solid fa-user-shield"></i>'  // Officer icon
+            icon: '<i class="fa-solid fa-user-shield"></i>' // Officer icon
         }
     ],
     crimes: [
-        { 
-            title: 'Case #001: Robbery', 
+        {
+            title: 'Case #001: Robbery',
             details: 'Location: Main Street | Status: Solved',
-            icon: '<i class="fa-solid fa-gavel"></i>'  // Crime icon
+            icon: '<i class="fa-solid fa-gavel"></i>' // Crime icon
         },
-        { 
-            title: 'Case #002: Assault', 
+        {
+            title: 'Case #002: Assault',
             details: 'Location: Park Avenue | Status: Pending',
-            icon: '<i class="fa-solid fa-gavel"></i>'  // Crime icon
+            icon: '<i class="fa-solid fa-gavel"></i>' // Crime icon
         }
     ],
     traffic: [
-        { 
-            title: 'Speeding', 
+        {
+            title: 'Speeding',
             details: 'Fines: $200 | Points: 2',
-            icon: '<i class="fa-solid fa-car-crash"></i>'  // Traffic icon
+            icon: '<i class="fa-solid fa-car-crash"></i>' // Traffic icon
         },
-        { 
-            title: 'Reckless Driving', 
+        {
+            title: 'Reckless Driving',
             details: 'Fines: $500 | Points: 4',
-            icon: '<i class="fa-solid fa-car-crash"></i>'  // Traffic icon
+            icon: '<i class="fa-solid fa-car-crash"></i>' // Traffic icon
         }
     ]
 };
@@ -51,56 +51,45 @@ function toggleContainers(type) {
     const content = document.getElementById('content');
     content.innerHTML = ''; // Clear content before adding new ones
 
-    // Loop over the data to create the container boxes
     data[type].forEach(item => {
         const box = document.createElement('div');
         box.classList.add('container-box');
-        
-        // Add icon and title to the box
+
         box.innerHTML = `
             <h3>${item.icon} ${item.title}</h3>
             <hr>
         `;
 
-        // Create the element for content (image or text or HTML)
         let contentElement;
 
         if (item.details.endsWith('.png') || item.details.endsWith('.jpg') || item.details.endsWith('.jpeg')) {
-            // If the details are an image path, create the image element
             contentElement = document.createElement('img');
             contentElement.src = item.details;
             contentElement.alt = `${item.title} Image`;
             contentElement.classList.add('container-image');
         } else if (item.details.endsWith('.html')) {
-            // If the details are an HTML file, fetch the content and display it as HTML
-            contentElement = document.createElement('div'); // Use a div for HTML content
-            contentElement.textContent = 'Loading...'; // Placeholder while loading
+            contentElement = document.createElement('div');
+            contentElement.textContent = 'Loading...';
             fetch(item.details)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     return response.text();
                 })
-                .then(html => {
-                    contentElement.innerHTML = html; // Render the HTML content
-                })
+                .then(html => contentElement.innerHTML = html)
                 .catch(error => {
                     console.error('Failed to load file:', error);
                     contentElement.textContent = 'Error loading file';
                 });
         } else {
-            // If the details are plain text, create a paragraph
             contentElement = document.createElement('p');
             contentElement.textContent = item.details;
         }
 
-        // Initially set the content to be hidden (toggle functionality)
         contentElement.style.display = 'none';
         box.appendChild(contentElement);
 
-        // Add the click event listener to toggle the details visibility
-        box.addEventListener('click', function () {
+        const titleElement = box.querySelector('h3');
+        titleElement.addEventListener('click', () => {
             contentElement.style.display = contentElement.style.display === 'block' ? 'none' : 'block';
         });
 
@@ -108,38 +97,31 @@ function toggleContainers(type) {
     });
 }
 
-// Function to highlight the text and handle search functionality
 async function highlightSearch() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const content = document.getElementById('content');
-    content.innerHTML = ''; // Clear the content before displaying results
+    content.innerHTML = '';
 
     if (input) {
         let foundMatch = false;
 
-        // Loop through all data categories (officers, crimes, traffic)
         for (const category in data) {
             for (const item of data[category]) {
                 const titleText = item.title.toLowerCase();
                 const detailsText = item.details.toLowerCase();
-                let htmlContent = ''; // This will hold the fetched content for HTML files
+                let htmlContent = '';
 
-                // If the details are an HTML file, fetch the content and display it as HTML
                 if (item.details.endsWith('.html')) {
                     try {
                         const response = await fetch(item.details);
-                        if (response.ok) {
-                            htmlContent = await response.text();  // Fetch and store HTML content
-                        }
+                        if (response.ok) htmlContent = await response.text();
                     } catch (error) {
                         console.error('Failed to load file:', error);
                     }
                 }
 
-                // Exclude media or file paths (e.g., image paths or .png, .jpg) from matching in details
                 const sanitizedDetailsText = sanitizeDetailsText(item.details);
 
-                // If title, sanitized details, or HTML content matches the search term, display the container
                 if (titleText.includes(input) || sanitizedDetailsText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
                     const box = document.createElement('div');
@@ -151,30 +133,25 @@ async function highlightSearch() {
                         <p>${sanitizedDetailsText}</p>
                     `;
 
-                    // Automatically open the container if a match is found
                     const details = box.querySelector('p');
-                    details.style.display = 'block';  // Make sure details are visible
+                    details.style.display = 'block';
 
-                    // Add the click event listener to toggle the details visibility
-                    box.addEventListener('click', function () {
-                        const details = box.querySelector('p');
+                    const titleElement = box.querySelector('h3');
+                    titleElement.addEventListener('click', () => {
                         const allDetails = document.querySelectorAll('.container-box p');
                         allDetails.forEach(detail => {
-                            if (detail !== details) {
-                                detail.style.display = 'none';
-                            }
+                            if (detail !== details) detail.style.display = 'none';
                         });
                         details.style.display = details.style.display === 'block' ? 'none' : 'block';
                     });
 
-                    // Highlight matching text in title and details
-                    highlightText(box.querySelector('h3'), input);  // Highlight in the title
-                    highlightText(box.querySelector('p'), input);   // Highlight in the details
+                    highlightText(box.querySelector('h3'), input);
+                    highlightText(box.querySelector('p'), input);
 
-                    // If the content is HTML (e.g., volumeii.html), display it as HTML
                     if (htmlContent) {
                         const htmlElement = document.createElement('div');
                         htmlElement.innerHTML = htmlContent;
+                        highlightText(htmlElement, input);
                         box.appendChild(htmlElement);
                     }
 
@@ -183,43 +160,31 @@ async function highlightSearch() {
             }
         }
 
-        // If no matches were found, hide all containers
-        if (!foundMatch) {
-            content.innerHTML = '<p>No matching records found.</p>';
-        }
+        if (!foundMatch) content.innerHTML = '<p>No matching records found.</p>';
     } else {
-        // If no input is given, show no containers (same as initial load)
-        content.innerHTML = ''; // Empty the content, no containers visible
+        content.innerHTML = '';
     }
 }
 
-// Function to sanitize details text (exclude media and file paths)
 function sanitizeDetailsText(detailsText) {
-    // This regex matches common image paths (e.g., .png, .jpg, .jpeg, etc.) and removes them
-    const sanitizedText = detailsText.replace(/(https?:\/\/[^\s]+(?:\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg|\.webp))/gi, '');
-    return sanitizedText;
+    return detailsText.replace(/(https?:\/\/[^\s]+(?:\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg|\.webp))/gi, '');
 }
 
 function highlightText(element, query) {
-    const originalHTML = element.innerHTML;  // Save original HTML to preserve the icon
-
-    // Create a temporary div to extract just the text content
+    const originalHTML = element.innerHTML;
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = originalHTML;
 
-    // Find the icon and text separately
     const icon = tempDiv.querySelector('i');
-    const textContent = tempDiv.textContent;  // Get the text content without the icon
+    const textContent = tempDiv.textContent;
 
-    // Use regex to highlight the text matching the query
-    const regex = new RegExp(`(${query})`, 'gi');  // Case-insensitive match
-    const highlightedText = textContent.replace(regex, '<span class="highlight">$1</span>');  // Wrap matched text in <span>
+    const regex = new RegExp(`(${query})`, 'gi');
+    const highlightedText = textContent.replace(regex, '<span class="highlight">$1</span>');
 
-    // Rebuild the HTML with the icon and highlighted text
     if (icon) {
         element.innerHTML = `<i class="${icon.className}"></i> ${highlightedText}`;
     } else {
-        element.innerHTML = highlightedText;  // In case there's no icon
+        element.innerHTML = highlightedText;
     }
 }
 
