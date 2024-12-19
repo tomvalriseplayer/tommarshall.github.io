@@ -1,7 +1,7 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME I1 | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
@@ -217,6 +217,10 @@ async function highlightSearch() {
         if (!foundMatch) {
             content.innerHTML = '<p>No matching records found.</p>';
         }
+    } else {
+        // If input is cleared, reset the content to initial state
+        content.innerHTML = ''; // Clear content
+        // Optionally, you can add code here to show the main menu buttons if needed
     }
 }
 
