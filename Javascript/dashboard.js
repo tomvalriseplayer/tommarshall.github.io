@@ -75,7 +75,9 @@ function toggleContainers(type) {
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     return response.text();
                 })
-                .then(html => contentElement.innerHTML = html)
+                .then(html => {
+                    contentElement.innerHTML = html;
+                })
                 .catch(error => {
                     console.error('Failed to load file:', error);
                     contentElement.textContent = 'Error loading file';
@@ -100,7 +102,7 @@ function toggleContainers(type) {
 async function highlightSearch() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const content = document.getElementById('content');
-    content.innerHTML = '';
+    content.innerHTML = ''; // Clear previous results
 
     if (input) {
         let foundMatch = false;
@@ -121,6 +123,7 @@ async function highlightSearch() {
 
                 if (titleText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
+
                     const box = document.createElement('div');
                     box.classList.add('container-box');
 
@@ -130,9 +133,9 @@ async function highlightSearch() {
                     `;
 
                     const htmlElement = document.createElement('div');
-                    htmlElement.innerHTML = htmlContent;
+                    htmlElement.innerHTML = htmlContent; // Render HTML
 
-                    // Highlight in the rendered HTML content
+                    // Highlight matches within the rendered HTML content
                     highlightText(htmlElement, input);
 
                     box.appendChild(htmlElement);
@@ -142,7 +145,7 @@ async function highlightSearch() {
                         htmlElement.style.display = htmlElement.style.display === 'block' ? 'none' : 'block';
                     });
 
-                    // Highlight in the title
+                    // Highlight matches in the title
                     highlightText(box.querySelector('h3'), input);
 
                     content.appendChild(box);
@@ -150,39 +153,22 @@ async function highlightSearch() {
             }
         }
 
-        if (!foundMatch) content.innerHTML = '<p>No matching records found.</p>';
-    } else {
-        content.innerHTML = '';
+        if (!foundMatch) {
+            content.innerHTML = '<p>No matching records found.</p>';
+        }
     }
-}
-
-function sanitizeDetailsText(detailsText) {
-    return detailsText.replace(/(https?:\/\/[^\s]+(?:\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg|\.webp))/gi, '');
 }
 
 function highlightText(element, query) {
-    const originalHTML = element.innerHTML;
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = originalHTML;
-
-    const icon = tempDiv.querySelector('i');
-    const textContent = tempDiv.textContent;
-
-    const regex = new RegExp(`(${query})`, 'gi');
-    const highlightedText = textContent.replace(regex, '<span class="highlight">$1</span>');
-
-    if (icon) {
-        element.innerHTML = `<i class="${icon.className}"></i> ${highlightedText}`;
-    } else {
-        element.innerHTML = highlightedText;
-    }
+    const regex = new RegExp(`(${query})`, 'gi'); // Case-insensitive regex
+    element.innerHTML = element.innerHTML.replace(regex, '<span class="highlight">$1</span>');
 }
 
 // Function to clear the highlights
 function clearHighlights() {
     const highlightedElements = document.querySelectorAll('.highlight');
     highlightedElements.forEach(element => {
-        const originalText = element.textContent;  // Get the original text content
-        element.replaceWith(originalText);  // Replace the highlight span with the original text
+        const originalText = element.textContent; // Get the original text content
+        element.replaceWith(originalText); // Replace the highlight span with the original text
     });
 }
