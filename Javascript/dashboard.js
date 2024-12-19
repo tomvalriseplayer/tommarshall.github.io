@@ -100,7 +100,7 @@ function toggleContainers(type) {
 async function highlightSearch() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const content = document.getElementById('content');
-    content.innerHTML = ''; // Clear previous results
+    content.innerHTML = '';
 
     if (input) {
         let foundMatch = false;
@@ -111,26 +111,16 @@ async function highlightSearch() {
                 let htmlContent = '';
 
                 if (item.details.endsWith('.html')) {
-                    contentElement = document.createElement('div');
-                    contentElement.textContent = 'Loading...'; // Temporary loading indicator
-                    fetch(item.details)
-                        .then(response => {
-                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                            return response.text();
-                        })
-                        .then(html => {
-                            contentElement.innerHTML = html; // Render fetched HTML
-                            highlightText(contentElement, document.getElementById('searchInput').value.toLowerCase()); // Highlight search terms
-                        })
-                        .catch(error => {
-                            console.error('Failed to load file:', error);
-                            contentElement.textContent = 'Error loading file';
-                        });
-                }                
+                    try {
+                        const response = await fetch(item.details);
+                        if (response.ok) htmlContent = await response.text();
+                    } catch (error) {
+                        console.error('Failed to load file:', error);
+                    }
+                }
 
                 if (titleText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
-
                     const box = document.createElement('div');
                     box.classList.add('container-box');
 
@@ -139,21 +129,20 @@ async function highlightSearch() {
                         <hr>
                     `;
 
-                    const htmlContainer = document.createElement('div');
-                    htmlContainer.innerHTML = htmlContent; // Render HTML
-                    htmlContainer.style.display = 'none'; // Hide by default
+                    const htmlElement = document.createElement('div');
+                    htmlElement.innerHTML = htmlContent;
 
-                    // Highlight matches within the rendered HTML
-                    highlightText(htmlContainer, input);
+                    // Highlight in the rendered HTML content
+                    highlightText(htmlElement, input);
 
-                    box.appendChild(htmlContainer);
+                    box.appendChild(htmlElement);
 
                     const titleElement = box.querySelector('h3');
                     titleElement.addEventListener('click', () => {
-                        htmlContainer.style.display = htmlContainer.style.display === 'block' ? 'none' : 'block';
+                        htmlElement.style.display = htmlElement.style.display === 'block' ? 'none' : 'block';
                     });
 
-                    // Highlight matches in the title
+                    // Highlight in the title
                     highlightText(box.querySelector('h3'), input);
 
                     content.appendChild(box);
@@ -161,9 +150,9 @@ async function highlightSearch() {
             }
         }
 
-        if (!foundMatch) {
-            content.innerHTML = '<p>No matching records found.</p>';
-        }
+        if (!foundMatch) content.innerHTML = '<p>No matching records found.</p>';
+    } else {
+        content.innerHTML = '';
     }
 }
 
@@ -172,15 +161,22 @@ function sanitizeDetailsText(detailsText) {
 }
 
 function highlightText(element, query) {
-    if (!query) return; // Skip if no query is provided
+    const originalHTML = element.innerHTML;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = originalHTML;
 
-    const regex = new RegExp(`(${query})`, 'gi'); // Case-insensitive regex
-    const originalHTML = element.innerHTML; // Preserve the original HTML structure
+    const icon = tempDiv.querySelector('i');
+    const textContent = tempDiv.textContent;
 
-    // Replace matches with a span for highlighting
-    element.innerHTML = originalHTML.replace(regex, '<span class="highlight">$1</span>');
+    const regex = new RegExp(`(${query})`, 'gi');
+    const highlightedText = textContent.replace(regex, '<span class="highlight">$1</span>');
+
+    if (icon) {
+        element.innerHTML = `<i class="${icon.className}"></i> ${highlightedText}`;
+    } else {
+        element.innerHTML = highlightedText;
+    }
 }
-
 
 // Function to clear the highlights
 function clearHighlights() {
