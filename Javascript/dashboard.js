@@ -160,7 +160,6 @@ async function highlightSearch() {
                         <hr>
                     `;
 
-                    const shadowRoot = box.attachShadow({ mode: 'open' });
                     const htmlElement = document.createElement('div');
                     htmlElement.innerHTML = htmlContent; // Render HTML
 
@@ -172,11 +171,8 @@ async function highlightSearch() {
                         const link = document.createElement('link');
                         link.rel = 'stylesheet';
                         link.href = item.cssPath;
-                        shadowRoot.appendChild(link);
+                        htmlElement.appendChild(link);
                     }
-
-                    shadowRoot.appendChild(htmlElement);
-                    box.appendChild(shadowRoot);
 
                     const titleElement = box.querySelector('h3');
                     titleElement.addEventListener('click', () => {
