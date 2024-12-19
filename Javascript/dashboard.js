@@ -1,7 +1,7 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME IE | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
@@ -86,7 +86,6 @@ function toggleContainers(type) {
             contentElement.src = item.details;
             contentElement.classList.add('container-iframe');
             contentElement.style.width = '100%';
-            contentElement.style.height = '100%'; // Adjust height to fit the container
             contentElement.style.border = 'none';
             contentElement.onload = () => {
                 const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
@@ -96,6 +95,8 @@ function toggleContainers(type) {
                     link.href = item.cssPath;
                     iframeDoc.head.appendChild(link);
                 }
+                // Adjust iframe height to fit content
+                contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
             };
         } else {
             contentElement = document.createElement('p');
@@ -108,6 +109,10 @@ function toggleContainers(type) {
         const titleElement = box.querySelector('h3');
         titleElement.addEventListener('click', () => {
             contentElement.style.display = contentElement.style.display === 'block' ? 'none' : 'block';
+            if (contentElement.tagName === 'IFRAME') {
+                const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
+                contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
+            }
         });
 
         content.appendChild(box);
