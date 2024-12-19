@@ -1,13 +1,13 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME IE | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
         },
         {
-            title: 'VOLUME II | POLICY',
+            title: 'VOLUME IIE | POLICY',
             details: 'Text/volumeii.html', // Load text from this file
             icon: '<i class="fa-solid fa-paste"></i>', // Officer icon
             cssPath: 'Style/volumeii.css'
@@ -160,23 +160,63 @@ async function highlightSearch() {
                         <hr>
                     `;
 
-                    const htmlElement = document.createElement('div');
-                    htmlElement.innerHTML = htmlContent; // Render HTML
+                    let contentElement;
+                    
+                    if (item.details.endsWith('.html')) {
+                        contentElement = document.createElement('iframe');
+                        contentElement.classList.add('container-iframe');
+                        contentElement.style.width = '100%';
+                        contentElement.style.border = 'none';
+                        contentElement.style.display = 'none';
+                        
+                        // Write the highlighted content to the iframe
+                        box.appendChild(contentElement);
+                        contentElement.onload = () => {
+                            const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
+                            
+                            // Apply the specific CSS first
+                            if (item.cssPath) {
+                                const link = iframeDoc.createElement('link');
+                                link.rel = 'stylesheet';
+                                link.href = item.cssPath;
+                                iframeDoc.head.appendChild(link);
+                            }
 
-                    // Highlight matches within the rendered HTML content
-                    highlightText(htmlElement, input);
+                            // Add highlighted content
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = htmlContent;
+                            highlightText(tempDiv, input);
+                            iframeDoc.body.innerHTML = tempDiv.innerHTML;
 
-                    // Apply CSS if available
-                    if (item.cssPath) {
-                        const link = document.createElement('link');
-                        link.rel = 'stylesheet';
-                        link.href = item.cssPath;
-                        htmlElement.appendChild(link);
+                            // Style the iframe content
+                            iframeDoc.body.style.display = 'flex';
+                            iframeDoc.body.style.justifyContent = 'center';
+                            iframeDoc.body.style.alignItems = 'center';
+                            iframeDoc.body.style.textAlign = 'center';
+                            iframeDoc.body.style.margin = '0';
+                            iframeDoc.body.style.padding = '20px';
+                            iframeDoc.body.style.boxSizing = 'border-box';
+                            
+                            // Adjust iframe height
+                            contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
+                        };
+                        
+                        // Set a data URL to trigger the onload event
+                        contentElement.src = 'about:blank';
+                    } else {
+                        contentElement = document.createElement('p');
+                        contentElement.textContent = item.details;
+                        contentElement.style.display = 'none';
+                        box.appendChild(contentElement);
                     }
 
                     const titleElement = box.querySelector('h3');
                     titleElement.addEventListener('click', () => {
-                        htmlElement.style.display = htmlElement.style.display === 'block' ? 'none' : 'block';
+                        contentElement.style.display = contentElement.style.display === 'block' ? 'none' : 'block';
+                        if (contentElement.tagName === 'IFRAME') {
+                            const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
+                            contentElement.style.height = iframeDoc.body.scrollHeight + 'px';
+                        }
                     });
 
                     // Highlight matches in the title
