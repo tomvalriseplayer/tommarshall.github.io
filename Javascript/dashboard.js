@@ -1,7 +1,7 @@
 const data = {
     officers: [
         {
-            title: 'VOLUME IE | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>' // Officer icon
         },
@@ -100,7 +100,7 @@ function toggleContainers(type) {
 async function highlightSearch() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const content = document.getElementById('content');
-    content.innerHTML = '';
+    content.innerHTML = ''; // Clear previous results
 
     if (input) {
         let foundMatch = false;
@@ -121,6 +121,7 @@ async function highlightSearch() {
 
                 if (titleText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
+
                     const box = document.createElement('div');
                     box.classList.add('container-box');
 
@@ -129,20 +130,21 @@ async function highlightSearch() {
                         <hr>
                     `;
 
-                    const htmlElement = document.createElement('div');
-                    htmlElement.innerHTML = htmlContent;
+                    const htmlContainer = document.createElement('div');
+                    htmlContainer.innerHTML = htmlContent; // Render HTML
+                    htmlContainer.style.display = 'none'; // Hide by default
 
-                    // Highlight in the rendered HTML content
-                    highlightText(htmlElement, input);
+                    // Highlight matches within the rendered HTML
+                    highlightText(htmlContainer, input);
 
-                    box.appendChild(htmlElement);
+                    box.appendChild(htmlContainer);
 
                     const titleElement = box.querySelector('h3');
                     titleElement.addEventListener('click', () => {
-                        htmlElement.style.display = htmlElement.style.display === 'block' ? 'none' : 'block';
+                        htmlContainer.style.display = htmlContainer.style.display === 'block' ? 'none' : 'block';
                     });
 
-                    // Highlight in the title
+                    // Highlight matches in the title
                     highlightText(box.querySelector('h3'), input);
 
                     content.appendChild(box);
@@ -150,9 +152,9 @@ async function highlightSearch() {
             }
         }
 
-        if (!foundMatch) content.innerHTML = '<p>No matching records found.</p>';
-    } else {
-        content.innerHTML = '';
+        if (!foundMatch) {
+            content.innerHTML = '<p>No matching records found.</p>';
+        }
     }
 }
 
