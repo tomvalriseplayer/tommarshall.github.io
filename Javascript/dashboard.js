@@ -166,6 +166,14 @@ async function highlightSearch() {
                     // Highlight matches within the rendered HTML content
                     highlightText(htmlElement, input);
 
+                    // Apply CSS if available
+                    if (item.cssPath) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = item.cssPath;
+                        htmlElement.appendChild(link);
+                    }
+
                     box.appendChild(htmlElement);
 
                     const titleElement = box.querySelector('h3');
