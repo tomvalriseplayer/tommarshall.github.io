@@ -169,7 +169,7 @@ body {
 }
 
 .highlight {
-  background-color: yellow; /* Highlight color */
+  background-color: rgb(255, 153, 0); /* Highlight color */
   color: #1e1e2f; /* Text color for highlighted text */
   font-weight: bold; /* Optional: make the highlighted text bold */
 }
