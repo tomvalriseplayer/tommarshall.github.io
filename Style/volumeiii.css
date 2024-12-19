@@ -66,11 +66,11 @@ body {
 }
 
 .main-content {
-    background-color: #FFFFFF;
+    background-color: #303249;
     border: 1px solid rgba(0,0,0,0);
     margin: 5px 0;
     padding: 10px 10px;
-    color: #000;
+    color: #ffffff;
     font-size: 95%;
 }
 
@@ -95,13 +95,13 @@ body {
 .pipe-table {
     border-collapse: collapse;
     width: 100%;
-    background-color: white;
+    background-color: #303249;
 }
 
 .pipe-table td {
-    border: 1px solid black;
+    border: 1px solid rgb(255, 255, 255);
     padding: 7px;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
 ul {
