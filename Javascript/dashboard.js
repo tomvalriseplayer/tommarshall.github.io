@@ -85,6 +85,9 @@ function toggleContainers(type) {
             contentElement = document.createElement('iframe');
             contentElement.src = item.details;
             contentElement.classList.add('container-iframe');
+            contentElement.style.width = '100%';
+            contentElement.style.height = '100%'; // Adjust height to fit the container
+            contentElement.style.border = 'none';
             contentElement.onload = () => {
                 const iframeDoc = contentElement.contentDocument || contentElement.contentWindow.document;
                 if (item.cssPath) {
