@@ -81,7 +81,21 @@ function toggleContainers(type) {
                     return response.text();
                 })
                 .then(html => {
-                    contentElement.innerHTML = html;
+                    // Create a temporary container to parse the HTML
+                    const tempContainer = document.createElement('div');
+                    tempContainer.innerHTML = html;
+
+                    // Find the head element and append the stylesheet link
+                    const head = tempContainer.querySelector('head');
+                    if (head) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = '../Style/volumeii.css'; // Ensure the correct path
+                        head.appendChild(link);
+                    }
+
+                    // Set the contentElement's innerHTML to the modified HTML
+                    contentElement.innerHTML = tempContainer.innerHTML;
                 })
                 .catch(error => {
                     console.error('Failed to load file:', error);
