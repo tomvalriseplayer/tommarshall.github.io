@@ -1,5 +1,5 @@
 const data = {
-    officers: [
+    manual: [
         {
             title: 'VOLUME I2 | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
