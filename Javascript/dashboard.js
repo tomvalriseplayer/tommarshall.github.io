@@ -1,7 +1,7 @@
 const data = {
     officers: [
         {
-            title: 'VOLUME I... | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>' // Officer icon
         },
@@ -108,7 +108,6 @@ async function highlightSearch() {
         for (const category in data) {
             for (const item of data[category]) {
                 const titleText = item.title.toLowerCase();
-                const detailsText = item.details.toLowerCase();
                 let htmlContent = '';
 
                 if (item.details.endsWith('.html')) {
@@ -120,9 +119,7 @@ async function highlightSearch() {
                     }
                 }
 
-                const sanitizedDetailsText = sanitizeDetailsText(item.details);
-
-                if (titleText.includes(input) || sanitizedDetailsText.includes(input) || htmlContent.toLowerCase().includes(input)) {
+                if (titleText.includes(input) || htmlContent.toLowerCase().includes(input)) {
                     foundMatch = true;
                     const box = document.createElement('div');
                     box.classList.add('container-box');
@@ -130,30 +127,23 @@ async function highlightSearch() {
                     box.innerHTML = `
                         <h3>${item.icon} ${item.title}</h3>
                         <hr>
-                        <p>${sanitizedDetailsText}</p>
                     `;
 
-                    const details = box.querySelector('p');
-                    details.style.display = 'block';
+                    const htmlElement = document.createElement('div');
+                    htmlElement.innerHTML = htmlContent;
+
+                    // Highlight in the rendered HTML content
+                    highlightText(htmlElement, input);
+
+                    box.appendChild(htmlElement);
 
                     const titleElement = box.querySelector('h3');
                     titleElement.addEventListener('click', () => {
-                        const allDetails = document.querySelectorAll('.container-box p');
-                        allDetails.forEach(detail => {
-                            if (detail !== details) detail.style.display = 'none';
-                        });
-                        details.style.display = details.style.display === 'block' ? 'none' : 'block';
+                        htmlElement.style.display = htmlElement.style.display === 'block' ? 'none' : 'block';
                     });
 
+                    // Highlight in the title
                     highlightText(box.querySelector('h3'), input);
-                    highlightText(box.querySelector('p'), input);
-
-                    if (htmlContent) {
-                        const htmlElement = document.createElement('div');
-                        htmlElement.innerHTML = htmlContent;
-                        highlightText(htmlElement, input);
-                        box.appendChild(htmlElement);
-                    }
 
                     content.appendChild(box);
                 }
