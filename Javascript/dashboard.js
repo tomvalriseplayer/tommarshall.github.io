@@ -10,19 +10,19 @@ const data = {
             title: 'VOLUME II | POLICY',
             details: 'Text/volumeii.html', // Load text from this file
             icon: '<i class="fa-solid fa-paste"></i>', // Officer icon
-            cssPath: '../Style/volumeii.css'
+            cssPath: 'Style/volumeii.css'
         },
         {
             title: 'VOLUME III | LINE PROCEDURES',
             details: 'Text/volumeiii.html', // Load text from this file
             icon: '<i class="fa-solid fa-book-journal-whills"></i>', // Officer icon
-            cssPath: '../Style/volumeiii.css'
+            cssPath: 'Style/volumeiii.css'
         },
         {
             title: 'VOLUME IV | PROFESSIONAL STANDARDS',
             details: 'Text/volumeiv.html', // Load text from this file
             icon: '<i class="fa-solid fa-user-shield"></i>', // Officer icon
-            cssPath: '../Style/volumeiv.css'
+            cssPath: 'Style/volumeiv.css'
         }
     ],
     impound: [
@@ -30,19 +30,19 @@ const data = {
             title: 'WHEN TO IMPOUND A VEHICLE?',
             details: 'Text/impoundi.html',
             icon: '<i class="fa-solid fa-gavel"></i>', // Crime icon
-            cssPath: '../Style/impound.css'
+            cssPath: 'Style/impound.css'
         },
         {
             title: 'LIST OF VIOLATIONS',
             details: 'Text/impoundii.html',
             icon: '<i class="fa-solid fa-gavel"></i>', // Crime icon
-            cssPath: '../Style/impound.css'
+            cssPath: 'Style/impound.css'
         },
         {
             title: 'WHEN TO IMPOUND A VEHICLE?',
             details: 'Text/impoundiii.html',
             icon: '<i class="fa-solid fa-gavel"></i>', // Crime icon
-            cssPath: '../Style/impound.css'
+            cssPath: 'Style/impound.css'
         }
     ],
     traffic: [
