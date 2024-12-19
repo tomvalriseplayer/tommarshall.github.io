@@ -1,7 +1,7 @@
 const data = {
     manual: [
         {
-            title: 'VOLUME I | ORGANIZATION AND FUNCTIONS',
+            title: 'VOLUME I2 | ORGANIZATION AND FUNCTIONS',
             details: 'Media/Structure.png',
             icon: '<i class="fa-solid fa-sitemap"></i>', // Officer icon
             cssPath: '' // No CSS needed for images
@@ -147,9 +147,12 @@ async function highlightSearch() {
                     } catch (error) {
                         console.error('Failed to load file:', error);
                     }
+                } else {
+                    htmlContent = item.details; // For non-HTML content
                 }
 
-                if (titleText.includes(input) || htmlContent.toLowerCase().includes(input)) {
+                const contentText = htmlContent.toLowerCase();
+                if (titleText.includes(input) || contentText.includes(input)) {
                     foundMatch = true;
 
                     const box = document.createElement('div');
@@ -160,27 +163,37 @@ async function highlightSearch() {
                         <hr>
                     `;
 
-                    const htmlElement = document.createElement('div');
-                    htmlElement.innerHTML = htmlContent; // Render HTML
+                    let contentElement;
+                    if (item.details.endsWith('.html')) {
+                        contentElement = document.createElement('div');
+                        contentElement.innerHTML = htmlContent;
+                        highlightText(contentElement, input);
+                    } else if (item.details.endsWith('.png') || item.details.endsWith('.jpg')) {
+                        contentElement = document.createElement('img');
+                        contentElement.src = item.details;
+                        contentElement.alt = item.title;
+                        contentElement.classList.add('container-image');
+                    } else {
+                        contentElement = document.createElement('p');
+                        contentElement.textContent = item.details;
+                        highlightText(contentElement, input);
+                    }
 
-                    // Highlight matches within the rendered HTML content
-                    highlightText(htmlElement, input);
+                    contentElement.style.display = 'block'; // Auto-show matching content
+                    box.appendChild(contentElement);
 
                     // Apply CSS if available
                     if (item.cssPath) {
                         const link = document.createElement('link');
                         link.rel = 'stylesheet';
                         link.href = item.cssPath;
-                        htmlElement.appendChild(link);
+                        box.appendChild(link);
                     }
 
-                    const titleElement = box.querySelector('h3');
-                    titleElement.addEventListener('click', () => {
-                        htmlElement.style.display = htmlElement.style.display === 'block' ? 'none' : 'block';
-                    });
-
-                    // Highlight matches in the title
-                    highlightText(box.querySelector('h3'), input);
+                    // Highlight title if it matches
+                    if (titleText.includes(input)) {
+                        highlightText(box.querySelector('h3'), input);
+                    }
 
                     content.appendChild(box);
                 }
@@ -194,37 +207,26 @@ async function highlightSearch() {
 }
 
 function highlightText(element, query) {
-    // Ensure the query is not too short
-    if (query.length < 2) return; // Prevent highlighting with single characters
+    if (query.length < 2) return;
 
-    const regex = new RegExp(`(${query})`, 'gi'); // Case-insensitive regex
-    const originalHTML = element.innerHTML;
-
-    // Temporary div to work on the text content without affecting tags
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = originalHTML;
-
-    // Find all text nodes in the element
-    const textNodes = [];
-    const walk = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, null, false);
-
-    while (walk.nextNode()) {
-        textNodes.push(walk.currentNode);
+    // Function to highlight text in a node
+    function highlightTextInNode(node) {
+        const regex = new RegExp(`(${query})`, 'gi');
+        if (node.nodeType === 3) { // Text node
+            const text = node.nodeValue;
+            if (regex.test(text)) {
+                const span = document.createElement('span');
+                span.innerHTML = text.replace(regex, '<span class="highlight">$1</span>');
+                node.parentNode.replaceChild(span, node);
+            }
+        } else if (node.nodeType === 1 && // Element node
+                  !['SCRIPT', 'STYLE', 'IFRAME'].includes(node.nodeName)) {
+            Array.from(node.childNodes).forEach(child => highlightTextInNode(child));
+        }
     }
 
-    // Highlight the text nodes without affecting the HTML tags
-    textNodes.forEach(node => {
-        const parentNode = node.parentNode;
-        const highlightedText = node.nodeValue.replace(regex, '<span class="highlight">$1</span>');
-        const span = document.createElement('span');
-        span.innerHTML = highlightedText;
-
-        // Replace the node with the highlighted span
-        parentNode.replaceChild(span, node);
-    });
-
-    // Update the element with the newly highlighted text
-    element.innerHTML = tempDiv.innerHTML;
+    // Start the recursive highlighting
+    highlightTextInNode(element);
 }
 
 // Function to clear the highlights

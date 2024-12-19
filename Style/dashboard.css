@@ -169,9 +169,11 @@ body {
 }
 
 .highlight {
-  background-color: rgb(255, 153, 0); /* Highlight color */
-  color: #1e1e2f; /* Text color for highlighted text */
-  font-weight: bold; /* Optional: make the highlighted text bold */
+  background-color: rgb(255, 174, 0);
+  color: black;
+  font-weight: bold;
+  padding: 2px;
+  border-radius: 2px;
 }
 
 .container-iframe {

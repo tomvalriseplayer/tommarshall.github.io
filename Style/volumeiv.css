@@ -56,6 +56,14 @@ body {
     font-weight: bold;
 }
 
+.highlight {
+    background-color: rgb(255, 174, 0);
+    color: black;
+    font-weight: bold;
+    padding: 2px;
+    border-radius: 2px;
+  }
+
 .sub-header {
     margin: 5px 0;
     background-color: #303249;
