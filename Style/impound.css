@@ -1,5 +1,5 @@
 body {
-    background-color: #FFFFFF;
+    background-color: #303249;
     font-family: Arial, sans-serif;
 }
 
@@ -65,7 +65,7 @@ body {
 .section-title {
     margin: 5px 0;
     background-color: #303249;
-    border: 1px solid #183a1b;
+    border: 1px solid #303249;
     padding: 2px 5px;
     line-height: 150%;
     color: #fff;
