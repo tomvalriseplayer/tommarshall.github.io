@@ -1,5 +1,5 @@
 // This is where the password is stored. This is for demonstration purposes, but in production, handle this on the server.
-const VALID_USERNAME = "T.J.A.Marshall";
+const VALID_USERNAME = "T.J.A Marshall";
 const VALID_PASSWORD = "VCsGMGX+bpCQ5$wL";
 const ALLOWED_IPS = ["213.6.235.238", "106.207.129.17"];  // Array of allowed IPs
 
