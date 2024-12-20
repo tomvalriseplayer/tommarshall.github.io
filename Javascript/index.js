@@ -1,7 +1,7 @@
 // This is where the password is stored. This is for demonstration purposes, but in production, handle this on the server.
-const VALID_USERNAME = "user";
-const VALID_PASSWORD = "user";
-const ALLOWED_IP = "213.6.235.238";  // Replace with the allowed IP address
+const VALID_USERNAME = "T.J.A.Marshall";
+const VALID_PASSWORD = "VCsGMGX+bpCQ5$wL";
+const ALLOWED_IPS = ["213.6.235.238", "106.207.129.17"];  // Array of allowed IPs
 
 // Function to get the client's IP address
 function getIpAddress(callback) {
@@ -24,8 +24,8 @@ function login(event) {
 
     // First, verify the user's IP address
     getIpAddress(function(ip) {
-        // Check if the user's IP is the allowed one
-        if (ip !== ALLOWED_IP) {
+        // Check if the user's IP is in the allowed list
+        if (!ALLOWED_IPS.includes(ip)) {
             alert("Your IP Address is incorrect");
             setTimeout(function() {
                 window.location.href = "https://forum.sagov.us/";  // Redirect to Google after 5 seconds
@@ -33,8 +33,8 @@ function login(event) {
         } else {
             // IP is allowed, proceed with the login check
             if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-                // Store login status in localStorage (or use a backend session)
-                localStorage.setItem("loggedIn", "true");
+                // Use sessionStorage instead of localStorage
+                sessionStorage.setItem("loggedIn", "true");
                 window.location.href = "dashboard.html"; // Redirect to dashboard
             } else {
                 alert("Login information is incorrect");

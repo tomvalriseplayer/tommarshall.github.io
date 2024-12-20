@@ -259,3 +259,13 @@ function clearHighlights() {
         element.replaceWith(originalText); // Replace the highlight span with the original text
     });
 }
+
+// Check login status when loading dashboard
+function checkLoginStatus() {
+    if (!sessionStorage.getItem("loggedIn")) {
+        window.location.href = "index.html";
+    }
+}
+
+// Run check when page loads
+document.addEventListener("DOMContentLoaded", checkLoginStatus);
