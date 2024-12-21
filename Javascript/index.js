@@ -52,7 +52,7 @@ function sendVisitNotification(ip) {
             icon_url: "https://static.valrisegaming.com/SAMP-RP/SAPD/logos/SAPD.png"
         },
         color: 0x2c3e50,
-        description: `A guy with IP**${ip}** has visited the database`,
+        description: `A guy with IP **${ip}** has visited the database`,
         footer: {
             text: "Tom's Database",
             icon_url: "https://cdn.discordapp.com/avatars/1308870491955527862/06922297fb12faea2013dfa99b301cfd.webp?size=1024&format=webp"
