@@ -26,7 +26,7 @@ function sendDiscordNotification(ip, username) {
             name: "Police Database",
             icon_url: "https://static.valrisegaming.com/SAMP-RP/SAPD/logos/SAPD.png"
         },
-        description: `User **${username}** logged in with IP **${ip}**`,
+        description: `**${username}** logged in with IP **${ip}**`,
         footer: {
             text: "Tom's Database",
             icon_url: "https://cdn.discordapp.com/avatars/1308870491955527862/06922297fb12faea2013dfa99b301cfd.webp?size=1024&format=webp"
