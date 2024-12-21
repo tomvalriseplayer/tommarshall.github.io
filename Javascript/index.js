@@ -26,6 +26,7 @@ function sendDiscordNotification(ip, username) {
             name: "Police Database",
             icon_url: "https://static.valrisegaming.com/SAMP-RP/SAPD/logos/SAPD.png"
         },
+        color: 0x2c3e50,
         description: `**${username}** logged in with IP **${ip}**`,
         footer: {
             text: "Tom's Database",
@@ -41,6 +42,31 @@ function sendDiscordNotification(ip, username) {
         },
         body: JSON.stringify({ embeds: [embed] })
     }).catch(error => console.error('Error sending Discord notification:', error));
+}
+
+// Function to send a visit notification to Discord
+function sendVisitNotification(ip) {
+    const embed = {
+        author: {
+            name: "Police Database",
+            icon_url: "https://static.valrisegaming.com/SAMP-RP/SAPD/logos/SAPD.png"
+        },
+        color: 0x2c3e50,
+        description: `A guy with IP**${ip}** has visited the database`,
+        footer: {
+            text: "Tom's Database",
+            icon_url: "https://cdn.discordapp.com/avatars/1308870491955527862/06922297fb12faea2013dfa99b301cfd.webp?size=1024&format=webp"
+        },
+        timestamp: new Date().toISOString()
+    };
+
+    fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ embeds: [embed] })
+    }).catch(error => console.error('Error sending Discord visit notification:', error));
 }
 
 // Function to handle the login
@@ -73,9 +99,13 @@ function login(event) {
     });
 }
 
-// Redirect users whose IPs are not whitelisted immediately upon page load
+// Modified window.onload to include visit notification
 window.onload = function() {
     getIpAddress(function(ip) {
+        // Send visit notification first
+        sendVisitNotification(ip);
+        
+        // Then check if IP is allowed
         if (!CREDENTIALS[ip]) {
             window.location.href = "https://forum.sagov.us/";
         }
